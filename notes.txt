@@ -1,9 +1,27 @@
-conda create -p venv python=3.8 -y
-conda activate venv/
-git init
-git add README.md
-git commit -m "commit_msg"
-git branch -M main
-git remote add origin https://github.com/Manas2001Agarwal/ML_Project.git
-git remote -v
-git push -u origin main
+Learn the SRC folder and build package
+Try to know more about Components folder
+How is this modular programming working __init__.py
+
+        conda create -p venv python=3.8 -y
+        conda activate venv/
+        git init
+        git add README.md
+        git commit -m "commit_msg"
+        git branch -M main
+        git remote add origin https://github.com/Manas2001Agarwal/ML_Project.git
+        git remote -v
+        git push -u origin main
+
+        Setup.py : Building application as a package
+        pip install -r requirements.txt
+
+    git add .
+    git status
+    git commit -m "msg"
+    git push -u origin main
+
+    Components : Data Ingestion : Reading a database, transformation of data etc. all steps
+    Nothing but modules that we are going to use inside ML_Project
+    sys : python Runtime requirements
+
+exc_tb = in which file and which line exception has occurred 
