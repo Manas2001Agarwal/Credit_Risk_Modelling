@@ -1,6 +1,7 @@
 Learn the SRC folder and build package
 Try to know more about Components folder
 How is this modular programming working __init__.py
+Learn about decorator
 
         conda create -p venv python=3.8 -y
         conda activate venv/
