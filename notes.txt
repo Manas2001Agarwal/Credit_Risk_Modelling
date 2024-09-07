@@ -1,0 +1,9 @@
+conda create -p venv python=3.8 -y
+conda activate venv/
+git init
+git add README.md
+git commit -m "commit_msg"
+git branch -M main
+git remote add origin https://github.com/Manas2001Agarwal/ML_Project.git
+git remote -v
+git push -u origin main
