@@ -3,16 +3,23 @@ from dataclasses import dataclass
 import os
 import numpy as np
 import pandas as pd
+import warnings
+import sklearn
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import (
     OneHotEncoder,
-    StandardScaler
+    StandardScaler,
+    OrdinalEncoder,
+    FunctionTransformer,
+    LabelEncoder
 )
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
+
+sklearn.set_config(transform_output="pandas")
 
 @dataclass
 class DataTransformationConfig():
@@ -25,40 +32,33 @@ class DataTransformation:
     
     def __init__(self):
         self.data_transformation_config = DataTransformationConfig()
+    
+    def trans_edu(self,X):
+        return (
+            X.replace(['SSC','12TH','GRADUATE','UNDER GRADUATE','POST-GRADUATE','OTHERS','PROFESSIONAL'],
+                                        [1,2,3,3,4,1,3])
+        )
         
     def get_data_transformer_object(self):
         try:
-            numerical_columns = ['writing_score','reading_score']
-            categorical_columns = [
-                "gender",
-                "race_ethnicity",
-                "parental_level_of_education",
-                "lunch",
-                "test_preparation_course",
-            ]
-            
-            num_pipeline = Pipeline(steps=[
-            ('imputer',SimpleImputer(strategy = 'median')),
-            ('scaler',StandardScaler())
-            ])
+            categorical_columns = ['MARITALSTATUS', 'GENDER' , 'last_prod_enq2' ,'first_prod_enq2']
             
             cat_pipeline = Pipeline(steps=[
-                ('imputer',SimpleImputer(strategy='most_frequent')),
                 ('ohe',OneHotEncoder(sparse_output=False)),
-                ('scaler',StandardScaler())
             ])
-            logging.info("Numerical columns scaling completed")
+            cat_edu = FunctionTransformer(self.trans_edu)
+            
             logging.info("Categorical columns encoding completed")
             
             preprocessor = ColumnTransformer(transformers = [
-                ('num_pipe',num_pipeline,numerical_columns),
-                ('cat_pipe',cat_pipeline,categorical_columns)
+                ('cat_pipe',cat_pipeline,categorical_columns),
+                ('cat_edu',cat_edu,['EDUCATION'])
             ],remainder = 'passthrough')
             
             return preprocessor
             
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e,sys) # type: ignore
     
     def initiate_data_transformation(self,train_path,test_path):
         try:
@@ -67,13 +67,14 @@ class DataTransformation:
             
             logging.info("Read_train and test data completed")
             preprocessing_obj = self.get_data_transformer_object()
-            target_column_name = "math_score"
+            target_column_name = "Approved_Flag"
+            lb = LabelEncoder()
             
             input_feature_train_df = train_data.drop(columns = [target_column_name],axis=1)
-            target_feature_train_df=train_data[target_column_name]
+            target_feature_train_df=lb.fit_transform(train_data[target_column_name])
             
             input_feature_test_df=test_data.drop(columns=[target_column_name],axis=1)
-            target_feature_test_df=test_data[target_column_name]
+            target_feature_test_df=lb.transform(test_data[target_column_name])
 
             logging.info(
                 f"Applying preprocessing object on training dataframe and testing dataframe."
@@ -102,5 +103,5 @@ class DataTransformation:
                 self.data_transformation_config.preprocessor_obj_file_path,
             )
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e,sys) # type: ignore
         

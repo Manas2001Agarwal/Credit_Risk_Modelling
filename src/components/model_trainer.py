@@ -2,17 +2,16 @@ import os
 import sys
 from dataclasses import dataclass
 
-from catboost import CatBoostRegressor
+from catboost import CatBoostClassifier
 from sklearn.ensemble import (
-    AdaBoostRegressor,
-    GradientBoostingRegressor,
-    RandomForestRegressor,
+    AdaBoostClassifier,
+    GradientBoostingClassifier,
+    RandomForestClassifier,
 )
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
-#from xgboost import XGBRegressor
+from sklearn.metrics import accuracy_score,classification_report, precision_recall_fscore_support
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+#from xgboost import XGBClassifier
 
 from src.exception import CustomException
 from src.logger import logging
@@ -37,46 +36,34 @@ class ModelTrainer:
                 test_array[:,-1]
             )
             models = {
-                "Random Forest": RandomForestRegressor(),
-                "Decision Tree": DecisionTreeRegressor(),
-                "Gradient Boosting": GradientBoostingRegressor(),
-                "Linear Regression": LinearRegression(),
-                #"XGBRegressor": XGBRegressor(),
-                "CatBoosting Regressor": CatBoostRegressor(verbose=False),
-                "AdaBoost Regressor": AdaBoostRegressor(),
+                "Random Forest": RandomForestClassifier(),
+                # "Decision Tree": DecisionTreeClassifier(),
+                "Gradient Boosting": GradientBoostingClassifier(),
+                # #"XGBRegressor": XGBRegressor(),
+                "CatBoosting Classifier": CatBoostClassifier(verbose=False),
+                # "AdaBoost Regressor": AdaBoostClassifier(),
             }
             
             params={
-                "Decision Tree": {
-                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                    # 'splitter':['best','random'],
-                    # 'max_features':['sqrt','log2'],
-                },
+                # "Decision Tree": {
+                #     'splitter':['best','random'],
+                #     'max_features':['sqrt','log2'],
+                # },
                 "Random Forest":{
-                    # 'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                 
-                    # 'max_features':['sqrt','log2',None],
-                    'n_estimators': [8,16,32,64,128,256]
+                    'max_features':['sqrt','log2'],
+                    'n_estimators': [320,420]
                 },
                 "Gradient Boosting":{
-                    # 'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
-                    'learning_rate':[.1,.01,.05,.001],
-                    'subsample':[0.6,0.7,0.75,0.8,0.85,0.9],
-                    # 'criterion':['squared_error', 'friedman_mse'],
-                    # 'max_features':['auto','sqrt','log2'],
-                    'n_estimators': [8,16,32,64,128,256]
+                    'subsample':[0.85,0.9],
+                    'n_estimators': [320,420]
                 },
-                "Linear Regression":{},
-                "CatBoosting Regressor":{
-                    'depth': [6,8,10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [30, 50, 100]
-                },
-                    "AdaBoost Regressor":{
-                    'learning_rate':[.1,.01,0.5,.001],
-                    # 'loss':['linear','square','exponential'],
-                    'n_estimators': [8,16,32,64,128,256]
-                }
+                 "CatBoosting Classifier":{
+                     'depth': [6,8,10],   
+                 }
+                #     "AdaBoost Classifier":{
+                #     'learning_rate':[.1,.01,0.5,.001],
+                #     'n_estimators': [8,16,32,64,128,256]
+                # }
             }
             model_report : dict = evaluate_models(X_train = X_train,y_train = y_train, 
                                                   X_test = X_test, y_test = y_test, models = models,param=params)
@@ -99,8 +86,8 @@ class ModelTrainer:
 
             predicted=best_model.predict(X_test)
 
-            r2_square = r2_score(y_test, predicted)
-            return r2_square
+            accuracy = accuracy_score(y_test, predicted)
+            return accuracy
             
 
         except Exception as e:
