@@ -39,7 +39,6 @@ class ModelTrainer:
                 "Random Forest": RandomForestClassifier(),
                 # "Decision Tree": DecisionTreeClassifier(),
                 "Gradient Boosting": GradientBoostingClassifier(),
-                # #"XGBRegressor": XGBRegressor(),
                 "CatBoosting Classifier": CatBoostClassifier(verbose=False),
                 # "AdaBoost Regressor": AdaBoostClassifier(),
             }
