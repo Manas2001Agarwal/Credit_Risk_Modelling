@@ -18,6 +18,7 @@ from sklearn.preprocessing import (
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
+from src.components.custom_transformer import One_way_annova, VIF
 
 sklearn.set_config(transform_output="pandas")
 
@@ -39,21 +40,31 @@ class DataTransformation:
                                         [1,2,3,3,4,1,3])
         )
         
-    def get_data_transformer_object(self):
+    def get_data_transformer_object(self,X):
         try:
             categorical_columns = ['MARITALSTATUS', 'GENDER' , 'last_prod_enq2' ,'first_prod_enq2']
-            
+            numeric_columns = []
+            for i in X.columns:
+                if X[i].dtype != 'object' and i not in ['PROSPECTID','Approved_Flag']:
+                    numeric_columns.append(i)
+                    
             cat_pipeline = Pipeline(steps=[
                 ('ohe',OneHotEncoder(sparse_output=False)),
             ])
+            
             cat_edu = FunctionTransformer(self.trans_edu)
+            
+            num_pipeline = Pipeline(steps=[
+                        ('vif',VIF(6)),
+                        ('annova',One_way_annova()) ])
             
             logging.info("Categorical columns encoding completed")
             
             preprocessor = ColumnTransformer(transformers = [
+                ('num_pipeline',num_pipeline,numeric_columns),
                 ('cat_pipe',cat_pipeline,categorical_columns),
                 ('cat_edu',cat_edu,['EDUCATION'])
-            ],remainder = 'passthrough')
+            ])
             
             return preprocessor
             
@@ -66,7 +77,7 @@ class DataTransformation:
             test_data = pd.read_csv("artifacts/test.csv")
             
             logging.info("Read_train and test data completed")
-            preprocessing_obj = self.get_data_transformer_object()
+            preprocessing_obj = self.get_data_transformer_object(train_data)
             target_column_name = "Approved_Flag"
             lb = LabelEncoder()
             
@@ -80,7 +91,7 @@ class DataTransformation:
                 f"Applying preprocessing object on training dataframe and testing dataframe."
             )
 
-            input_feature_train_arr=preprocessing_obj.fit_transform(input_feature_train_df)
+            input_feature_train_arr=preprocessing_obj.fit_transform(input_feature_train_df,train_data[target_column_name])
             input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
 
             train_arr = np.c_[
