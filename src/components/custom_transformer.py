@@ -70,5 +70,5 @@ if __name__ == "__main__":
     raw_data = pd.read_csv("artifacts/train.csv")
     X = raw_data.iloc[:,:-1]
     y = raw_data.iloc[:,-1]
-    print(fs_pipe.fit_transform(X,y))
+    print(fs_pipe.fit_transform(X,y).shape)
    
