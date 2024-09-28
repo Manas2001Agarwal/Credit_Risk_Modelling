@@ -20,7 +20,7 @@ class VIF(BaseEstimator,TransformerMixin):
                 numeric_columns.append(i)
                 
         self.vif_data = X[numeric_columns]
-        total_columns = X.shape[1]
+        total_columns = self.vif_data.shape[1]
         self.columns_to_be_kept = []
         column_index = 0
         
@@ -29,7 +29,6 @@ class VIF(BaseEstimator,TransformerMixin):
             if vif_value <= 6:
                 self.columns_to_be_kept.append( numeric_columns[i] )
                 column_index = column_index+1
-                
             else:
                 self.vif_data = self.vif_data.drop([ numeric_columns[i] ],axis=1)
         return self
@@ -60,7 +59,7 @@ class One_way_annova(BaseEstimator,TransformerMixin):
         return self
     
     def transform(self,X):
-        return X[self.columns_to_be_kept]
+        return np.array(X[self.columns_to_be_kept])
     
 fs_pipe = Pipeline(steps=[
     ('vif',VIF(6)),

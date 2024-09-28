@@ -20,7 +20,7 @@ from src.logger import logging
 from src.utils import save_object
 from src.components.custom_transformer import One_way_annova, VIF
 
-sklearn.set_config(transform_output="pandas")
+sklearn.set_config(transform_output="default")
 
 @dataclass
 class DataTransformationConfig():
@@ -36,13 +36,17 @@ class DataTransformation:
     
     def trans_edu(self,X):
         return (
-            X.replace(['SSC','12TH','GRADUATE','UNDER GRADUATE','POST-GRADUATE','OTHERS','PROFESSIONAL'],
-                                        [1,2,3,3,4,1,3])
+            X.replace(['SSC','12TH','GRADUATE',
+                       'UNDER GRADUATE','POST-GRADUATE',
+                       'OTHERS','PROFESSIONAL'],
+                        
+                        [1,2,3,3,4,1,3])
         )
         
     def get_data_transformer_object(self,X):
         try:
             categorical_columns = ['MARITALSTATUS', 'GENDER' , 'last_prod_enq2' ,'first_prod_enq2']
+            
             numeric_columns = []
             for i in X.columns:
                 if X[i].dtype != 'object' and i not in ['PROSPECTID','Approved_Flag']:
