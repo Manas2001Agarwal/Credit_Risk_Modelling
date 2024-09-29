@@ -25,6 +25,7 @@ sklearn.set_config(transform_output="default")
 @dataclass
 class DataTransformationConfig():
     preprocessor_obj_file_path = os.path.join('artifacts','preprocessor.pkl')
+    target_transformer_obj_file_path = os.path.join('artifacts','target_trf.pkl')
     
 class DataTransformation:
     '''
@@ -109,7 +110,11 @@ class DataTransformation:
 
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
-
+            )
+            
+            save_object(
+                file_path=self.data_transformation_config.target_transformer_obj_file_path,
+                obj = lb
             )
 
             return (

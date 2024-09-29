@@ -8,7 +8,9 @@ from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
-    confusion_matrix
+    confusion_matrix,
+    classification_report,
+    ConfusionMatrixDisplay
 )
 import streamlit as st # type: ignore
 
@@ -20,6 +22,11 @@ model_obj = "/Users/mukulagarwal/Desktop/Python_Code/Classification_Project/arti
 with open(model_obj,"rb") as file_m:
     model = dill.load(file_m)
     
+target_trf_path = "/Users/mukulagarwal/Desktop/Python_Code/Classification_Project/artifacts/target_trf.pkl"
+with open(target_trf_path,"rb") as file_t:
+    target_trf = dill.load(file_t)
+    
+        
 st.write('''
          ## Input Data
          ''')
@@ -33,15 +40,15 @@ def user_input_features():
 
 input_df = user_input_features()
 
-def transform_target(target):
-    return target.replace(
-        ['P1','P2','P3','P4'],
-        [1,2,3,4]
-    )
 
 if st.button('Run Model'):
     test_X = preprocessor.transform(input_df.iloc[:,:-1])
     prediction = model.predict(test_X)
-    transformed_target = transform_target(input_df.iloc[:,-1])
-    st.write('accuracy',accuracy_score(transformed_target,prediction))
-    #classification_report_ = classification_report()
+    transformed_target = target_trf.transform(input_df.iloc[:,-1])
+    st.metric('Accuracy',round(accuracy_score(transformed_target,prediction)*100,2))
+    
+    p_score = precision_score(transformed_target,prediction,average='macro')
+    st.metric('Precision Score',round(p_score,4)) #type: ignore
+    
+    r_score = recall_score(transformed_target,prediction,average='macro')
+    st.metric('Recall Score',round(r_score,4)) #type: ignore
