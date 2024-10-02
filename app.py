@@ -13,15 +13,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st # type: ignore
 
-preprocessor_obj = "/Users/mukulagarwal/Desktop/Python_Code/Classification_Project/artifacts/preprocessor.pkl"
+preprocessor_obj = "artifacts/preprocessor.pkl"
 with open(preprocessor_obj,"rb") as file_p:
     preprocessor = dill.load(file_p)
 
-model_obj = "/Users/mukulagarwal/Desktop/Python_Code/Classification_Project/artifacts/model.pkl"
+model_obj = "artifacts/model.pkl"
 with open(model_obj,"rb") as file_m:
     model = dill.load(file_m)
     
-target_trf_path = "/Users/mukulagarwal/Desktop/Python_Code/Classification_Project/artifacts/target_trf.pkl"
+target_trf_path = "artifacts/target_trf.pkl"
 with open(target_trf_path,"rb") as file_t:
     target_trf = dill.load(file_t)
     
@@ -29,12 +29,12 @@ with open(target_trf_path,"rb") as file_t:
 st.write('''
          ## Input Data
          ''')
-uploaded_file = st.file_uploader("Choose a file")
+# uploaded_file = st.file_uploader("Choose a file")
 
 def user_input_features():
-    if uploaded_file is not None:
-            dataframe = pd.read_csv(uploaded_file)
-            st.write(dataframe.iloc[:,:-1])
+    # if uploaded_file is not None:
+    dataframe = pd.read_csv("artifacts/test.csv")
+    st.write(dataframe.iloc[:,:-1])
     return dataframe
 
 input_df = user_input_features()
