@@ -29,6 +29,7 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
             print(para)
             gs = GridSearchCV(model,para,cv=3,scoring='accuracy',n_jobs=-1)
             
+            
             gs.fit(X_train,y_train)
 
             model.set_params(**gs.best_params_)

@@ -37,17 +37,11 @@ class ModelTrainer:
             )
             models = {
                 "Random Forest": RandomForestClassifier(),
-                # "Decision Tree": DecisionTreeClassifier(),
                 "Gradient Boosting": GradientBoostingClassifier(),
-                "CatBoosting Classifier": CatBoostClassifier(verbose=False),
-                # "AdaBoost Regressor": AdaBoostClassifier(),
+                "CatBoosting Classifier": CatBoostClassifier(verbose=False)
             }
             
             params={
-                # "Decision Tree": {
-                #     'splitter':['best','random'],
-                #     'max_features':['sqrt','log2'],
-                # },
                 "Random Forest":{
                     'max_features':['sqrt','log2'],
                     'n_estimators': [320,420]
@@ -59,10 +53,6 @@ class ModelTrainer:
                  "CatBoosting Classifier":{
                      'depth': [6,8,10],   
                  }
-                #     "AdaBoost Classifier":{
-                #     'learning_rate':[.1,.01,0.5,.001],
-                #     'n_estimators': [8,16,32,64,128,256]
-                # }
             }
             model_report : dict = evaluate_models(X_train = X_train,y_train = y_train, 
                                                   X_test = X_test, y_test = y_test, models = models,param=params)
