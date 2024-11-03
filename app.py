@@ -7,7 +7,11 @@ from sklearn.metrics import (
     recall_score,
     confusion_matrix,
     roc_auc_score,
-    f1_score
+    f1_score,
+    precision_recall_curve,
+    average_precision_score,
+    roc_curve,
+    auc
 )
 import matplotlib.pyplot as plt
 import seaborn as sns

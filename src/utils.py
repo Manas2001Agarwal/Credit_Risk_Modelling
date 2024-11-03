@@ -9,9 +9,10 @@ from sklearn.metrics import (accuracy_score,classification_report,f1_score,
 from sklearn.model_selection import GridSearchCV
 import mlflow
 from src.exception import CustomException
+from mlflow.models import infer_signature
 
 import dagshub
-dagshub.init(repo_owner='Manas2001Agarwal', repo_name='Credit_Risk_Modelling', mlflow=True)
+dagshub.init(repo_owner='Manas2001Agarwal', repo_name='Credit_Risk_Modelling', mlflow=True) # type: ignore
 
 def save_object(file_path,obj):
     try:
@@ -43,6 +44,8 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
 
             model.set_params(**gs.best_params_)
             model.fit(X_train,y_train)
+            
+            signature_schema = infer_signature(X_train,y_train)
 
             #model.fit(X_train, y_train)  # Train model
 
@@ -60,7 +63,8 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
             mlflow.log_params(gs.best_params_)
             mlflow.log_metric("train_accuracy",value=float(train_model_score))
             mlflow.log_metric("test_accuracy",value=float(test_model_score))
-            mlflow.log_dict(classification_report(y_test, y_test_pred),artifact_file="classification.json")
+            mlflow.log_text(str(classification_report(y_test, y_test_pred)),artifact_file="classification.json")
+            mlflow.sklearn.log_model(model, artifact_path = "model", signature = signature_schema)
             
             mlflow.end_run()
 
