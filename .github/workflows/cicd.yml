@@ -1,4 +1,4 @@
-name: CI/CD for dockerized credit-risk-modeling
+name: CI/CD for dockerized credit-risk-modeling_using_ML
 
 on:
     push:
