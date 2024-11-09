@@ -57,5 +57,3 @@ jobs:
 
         - name: image_digest
           run: echo ${{ steps.build-and-publish.outputs.digest }}
-
-
