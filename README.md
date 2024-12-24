@@ -11,3 +11,7 @@ Deployment & Automation: Developed a Streamlit front-end for model interaction, 
 Link to Streamlit App: https://manas2001agarwal-ml-project-app-zx6nu8.streamlit.app/                     (This is to run my ML Application directly)
 Link to Docker File: https://hub.docker.com/repository/docker/manas2512/credit-risk-modeling/general     (This is to pull docker image of my application from DockerHub)
 Link To DagsHub Repo : https://dagshub.com/Manas2001Agarwal/Credit_Risk_Modelling/experiments            (This is to check out and see comparison of ML Experiments, I tracked using                                                                                                             ML-Flow)
+
+
+**Confusion Matrix + Classification Metrics on Test Data**
+<img width="1011" alt="image" src="https://github.com/user-attachments/assets/85664e5c-3e73-4f6d-8b15-c364c9b27e38" />
