@@ -9,7 +9,9 @@ Modeling & Hyperparameter Tuning: Applied CatBoost to train the model, optimized
 Deployment & Automation: Developed a Streamlit front-end for model interaction, containerized the application with Docker, and automated build and deployment using GitHub Actions and Docker Hub for streamlined CI/CD.
 
 Link to Streamlit App: https://manas2001agarwal-ml-project-app-zx6nu8.streamlit.app/                     (This is to run my ML Application directly)
+
 Link to Docker File: https://hub.docker.com/repository/docker/manas2512/credit-risk-modeling/general     (This is to pull docker image of my application from DockerHub)
+
 Link To DagsHub Repo : https://dagshub.com/Manas2001Agarwal/Credit_Risk_Modelling/experiments            (This is to check out and see comparison of ML Experiments, I tracked using                                                                                                             ML-Flow)
 
 
